@@ -608,6 +608,23 @@ namespace LazyList {
     }
 
     ///
+    /// Applies `f` to a start value `s` and all elements in `l` going from right to left.
+    ///
+    /// That is, the result is of the form: `f(x1, ...lazy f(xn-1, lazy f(xn, s))...)`.
+    ///
+    /// Forces elements from the list only as needed by `f`.
+    @Experimental
+    pub def foldRightL(f: (a, Lazy[b]) -> b, s: b, l: LazyList[a]): b =
+        def loop(ll) = match ll {
+           case ENil         => s
+           case ECons(x, xs) => f(x, lazy loop(xs))
+           case LCons(x, xs) => f(x, lazy loop(force xs))
+           case LList(xs)    => loop(force xs)
+        };
+        loop(l)
+
+
+    ///
     /// Applies `f` to all elements in `l` going from left to right until a single value `v` is obtained.  Returns `Some(v)`.
     ///
     /// That is, the result is of the form: `Some(f(...f(f(x1, x2), x3)..., xn))`

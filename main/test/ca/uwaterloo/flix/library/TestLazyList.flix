@@ -661,6 +661,35 @@ namespace TestLazyList {
     def foldRight06(): Bool =
     	LazyList.foldRight((x, acc) -> x :: acc, Nil, LList(lazy LCons(1, lazy LList(lazy ECons(2, ECons(3, LList(lazy ENil))))))) == 1 :: 2 :: 3 :: Nil
 
+    /////////////////////////////////////////////////////////////////////////////
+    // foldRightL                                                              //
+    /////////////////////////////////////////////////////////////////////////////
+
+    @test
+    def foldRightL01(): Bool =
+    	LazyList.foldRightL((e, i) -> (force i - e) * (e rem 2 + 1), 100, ENil) == 100
+
+    @test
+    def foldRightL02(): Bool =
+    	LazyList.foldRightL((e, i) -> (force i - e) * (e rem 2 + 1), 100, LList(lazy ENil)) == 100
+
+    @test
+    def foldRightL03(): Bool =
+    	LazyList.foldRightL((e, i) -> (force i - e) * (e rem 2 + 1), 100, LCons(1, lazy LList(lazy ENil))) == 198
+
+    @test
+    def foldRightL04(): Bool =
+    	LazyList.foldRightL((e, i) -> (force i - e) * (e rem 2 + 1), 100, ECons(1, LCons(2, lazy ENil))) == 194
+
+    @test
+    def foldRightL05(): Bool =
+    	LazyList.foldRightL((e, i) -> (force i - e) * (e rem 2 + 1), 100, LCons(1, lazy ECons(2, LCons(3, lazy LList(lazy ENil))))) == 382
+
+    @test
+    def foldRightL06(): Bool =
+    	LazyList.foldRightL((x, acc) -> x :: force acc, Nil, LList(lazy LCons(1, lazy LList(lazy ECons(2, ECons(3, LList(lazy ENil))))))) == 1 :: 2 :: 3 :: Nil
+
+
 
     /////////////////////////////////////////////////////////////////////////////
     // toArray                                                                 //
